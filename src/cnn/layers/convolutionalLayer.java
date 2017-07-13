@@ -3,8 +3,8 @@ package cnn.layers;
 import cnn.utils.Padding;
 
 public class convolutionalLayer implements layer {
-	int height;
-	int width;
+	int inHeight;
+	int inWidth;
 	int windowHeight;
 	int windowWidth;
 	int inCannels;
@@ -13,8 +13,9 @@ public class convolutionalLayer implements layer {
 	boolean hasBias;
 	int h_stride;
 	int w_stride;
-	public convolutionalLayer(int height, 
-							  int width, 
+	
+	public convolutionalLayer(int inHeight, 
+							  int inWidth, 
 							  int windowHeight,
 							  int windowWidth,
 							  int inChannels,
@@ -25,8 +26,8 @@ public class convolutionalLayer implements layer {
 							  int w_stride
 							  ) {
 		// TODO Auto-generated constructor stub
-		this.height= height;
-		this.width= width;
+		this.inHeight= inHeight;
+		this.inWidth= inWidth;
 		this.windowHeight= windowHeight;
 		this.windowWidth= windowWidth;
 		this.inCannels= inChannels;
@@ -48,7 +49,23 @@ public class convolutionalLayer implements layer {
 	private int[][][] paddingInData(int[][][] inData, Padding paddingType) {
 		if(paddingType == Padding.valid)
 		{
-			
+			return inData;
+		}
+		if(paddingType == Padding.same)
+		{
+			int[][][] buf = new int[inCannels][inHeight+windowHeight/2][inWidth+windowWidth/2];
+			for(int c = 0; c < inCannels; c++)
+			{
+				for(int h = 0; h < inHeight; h++)
+				{
+					for(int w = 0; w < inWidth; w++)
+					{
+						buf[c][h+windowHeight/2 + h][windowWidth + w]= 
+								inData[c][h][w];
+					}
+				}
+			}
+			return buf;
 		}
 		return null;
 	}
