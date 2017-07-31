@@ -23,7 +23,15 @@ public class FullConnectedLayer {
 		return outParam;
 	}
 	public FullConnectedParam backwardPropagation(FullConnectedParam inParam) {
-		float[] outDelta = 
+		float[] outDelta = new float[inParam.getPrelayerDim()];
+		int[] inData = inParam.getLayerData();
+		float[] inDelta = inParam.getLayerDelta();
+		float[][] weight = inParam.getWeight();
+		for (int i = 0; i < outDelta.length; i++) {
+			for (int j = 0; j < inParam.getLayerDelta().length; j++) {
+				outDelta = inParam.
+			}
+		}
 		
 		
 		return null;

@@ -3,11 +3,13 @@ package cnn.pojo;
 public class FullConnectedParam {
 	int[] layerData;
 	
-	int[] layerDelta;
+	float[] layerDelta;
 	
 	float[][] weight;
 	
 	float[][] weightDelta;
+	
+	int prelayerDim;
 	
 	int layerDim;
 	
@@ -23,11 +25,11 @@ public class FullConnectedParam {
 		this.layerData = layerData;
 	}
 
-	public int[] getLayerDelta() {
+	public float[] getLayerDelta() {
 		return layerDelta;
 	}
 
-	public void setLayerDelta(int[] layerDelta) {
+	public void setLayerDelta(float[] layerDelta) {
 		this.layerDelta = layerDelta;
 	}
 
@@ -69,6 +71,14 @@ public class FullConnectedParam {
 
 	public void setWeightDelta(float[][] weightDelta) {
 		this.weightDelta = weightDelta;
+	}
+
+	public int getPrelayerDim() {
+		return prelayerDim;
+	}
+
+	public void setPrelayerDim(int prelayerDim) {
+		this.prelayerDim = prelayerDim;
 	}
 	
 }
