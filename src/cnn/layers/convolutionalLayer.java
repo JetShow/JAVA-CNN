@@ -16,6 +16,7 @@ public class convolutionalLayer {
 //	float[][][][] convolutionalKernel;
 //	float[] bias;
 	
+	
 	//当前层数据数组
 	int [][][] currentLayerData;
 	//当前层误差数组
