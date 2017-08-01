@@ -1,5 +1,9 @@
 package cnn.layers;
 
+import java.util.Arrays;
+
+import javax.swing.text.Position.Bias;
+
 import cnn.utils.Padding;
 
 public class convolutionalLayer {
@@ -45,7 +49,7 @@ public class convolutionalLayer {
 	int windowHeight;
 	//卷积核宽度
 	int windowWidth;
-	
+
 	
 	/*
 	 * 方法：前向传播
@@ -140,7 +144,7 @@ public class convolutionalLayer {
 			}
 		}
 	}
-	
+
 	/*
 	 * 方法：数组填充
 	 * 根据填充方式填充数组，包括前向传播数据填充和反向传播误差数据填充
