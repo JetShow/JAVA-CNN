@@ -23,7 +23,27 @@ public class ConvolutionalParams {
 	int hStride = 1;
 	//卷积的width步长
 	int wStride = 1;
+	//卷积核高度
+	int windowHeight;
+	//卷积核宽度
+	int windowWidth;
 	
+	
+	
+	public ConvolutionalParams() {
+		this.layerData = layerData;
+		this.layerDelta = layerDelta;
+		this.convolutionalKernel = convolutionalKernel;
+		this.bias = bias;
+		this.layerChannel = layerChannel;
+		this.layerHeight = layerHeight;
+		this.layerWidth = layerWidth;
+		this.paddingType = paddingType;
+		this.hStride = hStride;
+		this.wStride = wStride;
+		this.windowHeight = windowHeight;
+		this.windowWidth = windowWidth;
+	}
 	public int[][][] getLayerData() {
 		return layerData;
 	}
@@ -83,6 +103,18 @@ public class ConvolutionalParams {
 	}
 	public void setLayerWidth(int layerWidth) {
 		this.layerWidth = layerWidth;
+	}
+	public int getWindowHeight() {
+		return windowHeight;
+	}
+	public void setWindowHeight(int windowHeight) {
+		this.windowHeight = windowHeight;
+	}
+	public int getWindowWidth() {
+		return windowWidth;
+	}
+	public void setWindowWidth(int windowWidth) {
+		this.windowWidth = windowWidth;
 	}
 	
 }

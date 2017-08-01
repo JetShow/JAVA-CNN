@@ -1,6 +1,8 @@
 package cnn.pojo;
 
 public class FullConnectedParam {
+	int[] preLayerData;
+	
 	int[] layerData;
 	
 	float[] layerDelta;
@@ -15,7 +17,7 @@ public class FullConnectedParam {
 	
 	int nextLayerDim;
 	
-	int[] bias;
+	float[] bias;
 
 	public int[] getLayerData() {
 		return layerData;
@@ -41,11 +43,11 @@ public class FullConnectedParam {
 		this.layerDim = layerDim;
 	}
 
-	public int[] getBias() {
+	public float[] getBias() {
 		return bias;
 	}
 
-	public void setBias(int[] bias) {
+	public void setBias(float[] bias) {
 		this.bias = bias;
 	}
 
@@ -79,6 +81,14 @@ public class FullConnectedParam {
 
 	public void setPrelayerDim(int prelayerDim) {
 		this.prelayerDim = prelayerDim;
+	}
+
+	public int[] getPreLayerData() {
+		return preLayerData;
+	}
+
+	public void setPreLayerData(int[] preLayerData) {
+		this.preLayerData = preLayerData;
 	}
 	
 }
