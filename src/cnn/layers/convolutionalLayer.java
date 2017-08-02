@@ -1,25 +1,8 @@
 package cnn.layers;
 
-import java.util.Arrays;
-
-import javax.swing.text.Position.Bias;
-
 import cnn.utils.Padding;
 
 public class convolutionalLayer {
-//	int inHeight;
-//	int inWidth;
-//	int windowHeight;
-//	int windowWidth;
-//	int inCannels;
-//	int outChannels;
-//	Padding paddingType;
-//	boolean hasBias;
-//	int h_stride;
-//	int w_stride;
-//	float[][][][] convolutionalKernel;
-//	float[] bias;
-	
 	
 	//当前层数据数组
 	int [][][] currentLayerData;
@@ -51,6 +34,25 @@ public class convolutionalLayer {
 	int windowWidth;
 
 	
+	public convolutionalLayer(int layerChannel, int layerHeight, int layerWidth, 
+			int nextLayerChannel, Padding paddingType, int windowHeight, int windowWidth) {
+		this.currentLayerData = new int[layerChannel][layerHeight][layerWidth];
+		this.currentLayerDelta = new float[layerChannel][layerHeight][layerWidth];
+		this.paddingType = paddingType;
+		if (paddingType == Padding.same) {
+			this.nextLayerDelta = new float[nextLayerChannel][layerHeight][layerWidth];
+		}
+		else {
+			this.nextLayerDelta = new float[nextLayerChannel]
+						[layerHeight-windowHeight+1]
+								[layerWidth-windowWidth+1];
+		}
+		this.convolutionalKernel = new float[nextLayerChannel]
+										[layerChannel]
+												[windowHeight]
+														[windowWidth];
+		
+	}
 	/*
 	 * 方法：前向传播
 	 * param：inData 当前层的数据数组
@@ -163,14 +165,9 @@ public class convolutionalLayer {
 			int[][][] buf = new int[inData.length][inData[0].length+windowHeight-1][inData[0][0].length+windowWidth-1];
 			for(int c = 0; c < inData.length; c++)
 			{
-				for(int h = windowHeight/2; h < inData[c].length; h++)
+				for(int h = 0; h < inData[c].length; h++)
 				{
-//					for(int w = 0; w < inWidth; w++)
-//					{
-//						buf[c][h+windowHeight/2 + h][windowWidth + w]= 
-//								inData[c][h][w];
-//					}
-					System.arraycopy(inData[c][h], 0, buf[c][h], windowWidth/2, inData[c][h].length);
+					System.arraycopy(inData[c][h], 0, buf[c][h+windowHeight/2], windowWidth/2, inData[c][h].length);
 				}
 			}
 			return buf;
@@ -190,14 +187,9 @@ public class convolutionalLayer {
 			float[][][] buf = new float[inData.length][inData[0].length+windowHeight-1][inData[0][0].length+windowWidth-1];
 			for(int c = 0; c < inData.length; c++)
 			{
-				for(int h = windowHeight/2; h < inData[c].length; h++)
+				for(int h = 0; h < inData[c].length; h++)
 				{
-//					for(int w = 0; w < inWidth; w++)
-//					{
-//						buf[c][h+windowHeight/2 + h][windowWidth + w]= 
-//								inData[c][h][w];
-//					}
-					System.arraycopy(inData[c][h], 0, buf[c][h], windowWidth/2, inData[c][h].length);
+					System.arraycopy(inData[c][h], 0, buf[c][h+windowHeight/2], windowWidth/2, inData[c][h].length);
 				}				
 			}
 			return buf;

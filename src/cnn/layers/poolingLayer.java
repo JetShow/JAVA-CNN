@@ -1,26 +1,58 @@
 package cnn.layers;
 
-import cnn.pojo.MaxPoolParam;
-
 public class poolingLayer{
-		
-	public MaxPoolParam forwardPropagation(MaxPoolParam maxPoolParam) {
+	//当前层数据数组
+	int [][][] currentLayerData;
+	//当前层误差数组
+	float[][][] currentLayerDelta;
+	//下一层误差数组
+	float[][][] nextLayerDelta;
+	//记录最大位置数组
+	boolean[][][] maxLocation;
+	//数据数组通道数
+	int layerChannel;
+	//数据数组高度
+	int layerHeight;
+	//数据数组宽度
+	int layerWidth;	
+	//X方向池化尺寸
+	int poolX;
+	//Y方向池化尺寸
+	int poolY;
+	//池化X方向移动步长
+	int strideX;
+	//池化Y方向移动步长
+	int strideY;
+	
+	public poolingLayer(int layerChannel, int layerHeight, int layerWidth, 
+			int poolX, int poolY, int strideX, int strideY) {
+		this.layerChannel = layerChannel;
+		this.layerHeight = layerHeight;
+		this.layerWidth = layerWidth;
+		this.poolX = poolX;
+		this.poolY = poolY;
+		this.strideX = strideX;
+		this.strideY = strideY;
+		currentLayerData = new int[layerChannel][layerHeight][layerWidth];
+		currentLayerDelta = new float[layerChannel][layerHeight][layerWidth];
+		nextLayerDelta = new float[layerChannel][layerHeight/strideY][layerWidth/strideX];
+		maxLocation = new boolean[layerChannel][layerHeight][layerWidth];
+	}
+
+	public int[][][] forwardPropagation() {
 		// TODO Auto-generated method stub
-		int[][][] indata = maxPoolParam.getLayerData();
+		int[][][] indata = currentLayerData;
 		int[][][] outdata = 
-				new int[maxPoolParam.getLayerChannel()][maxPoolParam.getLayerHeight()/maxPoolParam.getStrideY()][maxPoolParam.getLayerWidth()/maxPoolParam.getStrideX()];
-		if(!checkStride(maxPoolParam.getLayerHeight(), 
-				maxPoolParam.getLayerWidth(), 
-				maxPoolParam.getStrideX(),
-				maxPoolParam.getStrideY()))
+				new int[layerChannel][layerHeight/strideY][layerWidth/strideX];
+		if(!checkStride(layerHeight, 
+						layerWidth, 
+						strideX,
+						strideY))
 		{
 			System.err.println("invalidated boolSize!");
 		}
-		int inHeight = maxPoolParam.getLayerHeight();
-		int inWidth = maxPoolParam.getLayerWidth();
-		int poolX = maxPoolParam.getPoolX();
-		int poolY = maxPoolParam.getPoolY();
-		boolean[][][] maxLocation = maxPoolParam.getMaxLocation();
+		int inHeight = layerHeight;
+		int inWidth = layerWidth;
 		for (int inc = 0; inc < indata.length; inc++) {
 			for (int iny = 0,outy=0; iny < indata[inc].length; iny += inHeight, outy++) {
 				for (int inx = 0,outx=0; inx < indata[inc][iny].length; inx += inWidth, outx++) {
@@ -42,56 +74,31 @@ public class poolingLayer{
 				}
 			}
 		}
-		MaxPoolParam outParam = new MaxPoolParam();
-		outParam.setLayerData(outdata);
-		outParam.setMaxLocation(maxLocation);
-		outParam.setLayerChannel(maxPoolParam.getLayerChannel());
-		outParam.setLayerHeight(maxPoolParam.getLayerHeight()/maxPoolParam.getStrideY());
-		outParam.setLayerWidth(maxPoolParam.getLayerWidth()/maxPoolParam.getStrideX());
-		outParam.setPoolX(maxPoolParam.getPoolX());
-		outParam.setPoolY(maxPoolParam.getPoolY());
-		outParam.setStrideX(maxPoolParam.getStrideX());
-		outParam.setStrideY(maxPoolParam.getStrideY());
-		return outParam;
+		return outdata;
 	}
 
-	public MaxPoolParam backwardPropagation(MaxPoolParam maxPoolParam) {
+	public void backwardPropagation() {
 		// TODO Auto-generated method stub
-		float[][][] currentDelta = maxPoolParam.getLayerDelta();
-		float[][][] preDelta = new 
-				float[maxPoolParam.getLayerChannel()]
-						[maxPoolParam.getLayerHeight()*maxPoolParam.getStrideY()]
-								[maxPoolParam.getLayerWidth()*maxPoolParam.getStrideX()];
-		int strideX = maxPoolParam.getStrideX();
-		int strideY = maxPoolParam.getStrideY();
-		boolean[][][] maxLocation = maxPoolParam.getMaxLocation();
+		float[][][] currentDelta = nextLayerDelta;
+//		float[][][] preDelta = new 
+//				float[layerChannel]
+//						[layerHeight*strideY]
+//								[layerWidth*strideX];
 		for (int outc = 0; outc < currentDelta.length; outc++) {
 			for (int outy = 0, iny = 0; outy < currentDelta[outc].length; outy+=strideY, iny++) {
-				for (int outx = 0, inx = 0; outx < preDelta[outc][iny].length; outx+=strideX, inx++) {
+				for (int outx = 0, inx = 0; outx < currentLayerDelta[outc][iny].length; outx+=strideX, inx++) {
 					for (int py = 0; py < strideY; py++) {
 						for (int px = 0; px < strideX; px++) {
 							if(maxLocation[outc][outy + py][outx + px])
 							{
-								preDelta[outc][outy + py][outx + px] = currentDelta[outc][iny][inx];
+								currentLayerDelta[outc][outy + py][outx + px] = currentDelta[outc][iny][inx];
 							}
 						}
 					}
 					 
 				}
 			}
-		}
-		MaxPoolParam outParam = new MaxPoolParam();
-		outParam.setLayerDelta(preDelta);
-		outParam.setMaxLocation(maxLocation);
-		outParam.setLayerChannel(maxPoolParam.getLayerChannel());
-		outParam.setLayerHeight(maxPoolParam.getLayerHeight()*maxPoolParam.getStrideY());
-		outParam.setLayerWidth(maxPoolParam.getLayerWidth()*maxPoolParam.getStrideX());
-		outParam.setPoolX(maxPoolParam.getPoolX());
-		outParam.setPoolY(maxPoolParam.getPoolY());
-		outParam.setStrideX(maxPoolParam.getStrideX());
-		outParam.setStrideY(maxPoolParam.getStrideY());
-		return outParam;
-		
+		}		
 	}
 	private boolean checkStride(int inHeight, int inWidth, int strideX, int strideY)
 	{
