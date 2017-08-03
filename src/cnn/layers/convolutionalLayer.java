@@ -1,6 +1,7 @@
 package cnn.layers;
 
 import cnn.utils.Padding;
+import cnn.utils.WeightInitializeUtil;
 
 public class convolutionalLayer {
 	
@@ -51,8 +52,12 @@ public class convolutionalLayer {
 										[layerChannel]
 												[windowHeight]
 														[windowWidth];
+		WeightInitializeUtil.xavier(convolutionalKernel, windowHeight * windowWidth, windowHeight * windowWidth);
+		this.bias = new float[nextLayerChannel];
 		
 	}
+
+
 	/*
 	 * 方法：前向传播
 	 * param：inData 当前层的数据数组
@@ -196,6 +201,148 @@ public class convolutionalLayer {
 		}
 		return null;
 	}
+	
+	
+	
+	public int[][][] getCurrentLayerData() {
+		return currentLayerData;
+	}
+
+
+	public void setCurrentLayerData(int[][][] currentLayerData) {
+		this.currentLayerData = currentLayerData;
+	}
+
+
+	public float[][][] getCurrentLayerDelta() {
+		return currentLayerDelta;
+	}
+
+
+	public void setCurrentLayerDelta(float[][][] currentLayerDelta) {
+		this.currentLayerDelta = currentLayerDelta;
+	}
+
+
+	public float[][][] getNextLayerDelta() {
+		return nextLayerDelta;
+	}
+
+
+	public void setNextLayerDelta(float[][][] nextLayerDelta) {
+		this.nextLayerDelta = nextLayerDelta;
+	}
+
+
+	public float[][][][] getConvolutionalKernel() {
+		return convolutionalKernel;
+	}
+
+
+	public void setConvolutionalKernel(float[][][][] convolutionalKernel) {
+		this.convolutionalKernel = convolutionalKernel;
+	}
+
+
+	public float[] getBias() {
+		return bias;
+	}
+
+
+	public void setBias(float[] bias) {
+		this.bias = bias;
+	}
+
+
+	public int getLayerChannel() {
+		return layerChannel;
+	}
+
+
+	public void setLayerChannel(int layerChannel) {
+		this.layerChannel = layerChannel;
+	}
+
+
+	public int getNextLayerChannel() {
+		return nextLayerChannel;
+	}
+
+
+	public void setNextLayerChannel(int nextLayerChannel) {
+		this.nextLayerChannel = nextLayerChannel;
+	}
+
+
+	public int getLayerHeight() {
+		return layerHeight;
+	}
+
+
+	public void setLayerHeight(int layerHeight) {
+		this.layerHeight = layerHeight;
+	}
+
+
+	public int getLayerWidth() {
+		return layerWidth;
+	}
+
+
+	public void setLayerWidth(int layerWidth) {
+		this.layerWidth = layerWidth;
+	}
+
+
+	public Padding getPaddingType() {
+		return paddingType;
+	}
+
+
+	public void setPaddingType(Padding paddingType) {
+		this.paddingType = paddingType;
+	}
+
+
+	public int gethStride() {
+		return hStride;
+	}
+
+
+	public void sethStride(int hStride) {
+		this.hStride = hStride;
+	}
+
+
+	public int getwStride() {
+		return wStride;
+	}
+
+
+	public void setwStride(int wStride) {
+		this.wStride = wStride;
+	}
+
+
+	public int getWindowHeight() {
+		return windowHeight;
+	}
+
+
+	public void setWindowHeight(int windowHeight) {
+		this.windowHeight = windowHeight;
+	}
+
+
+	public int getWindowWidth() {
+		return windowWidth;
+	}
+
+
+	public void setWindowWidth(int windowWidth) {
+		this.windowWidth = windowWidth;
+	}
+
 }
 
 
