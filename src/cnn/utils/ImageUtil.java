@@ -18,11 +18,9 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import org.apache.commons.beanutils.IntrospectionContext;
-
 public class ImageUtil {
 	
-	class MyCanvas extends Canvas{
+	public static class MyCanvas extends Canvas{
 		     private BufferedImage bi;
 		     private Image im;
 		     private int image_width;
@@ -217,8 +215,16 @@ public class ImageUtil {
 	}
 	
 	public static void showImage(BufferedImage[] images) {
-		JFrame f=new JFrame();
-        MyCanvas mc=new ImageUtil.MyCanvas();
-        f.add(mc);
+		for (BufferedImage bufferedImage : images) {
+			JFrame f=new JFrame();
+	        MyCanvas mc=new MyCanvas();
+	        f.add(mc);
+	        mc.setImage(bufferedImage);
+	        mc.repaint();
+	        f.setSize(400,550);
+	        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        f.setVisible(true);
+		}
+
 	}
 }
