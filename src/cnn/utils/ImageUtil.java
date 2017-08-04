@@ -197,7 +197,7 @@ public class ImageUtil {
 		cifarData.setDataLable(dataLable);
 		return cifarData;
 	}
-	
+		
 	public static BufferedImage[] array2Image(int[][][] array) {
 		BufferedImage[] outArray = null;
 		outArray = new BufferedImage[array.length];
@@ -221,7 +221,7 @@ public class ImageUtil {
 	        f.add(mc);
 	        mc.setImage(bufferedImage);
 	        mc.repaint();
-	        f.setSize(400,550);
+	        f.setSize(100,100);
 	        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        f.setVisible(true);
 		}

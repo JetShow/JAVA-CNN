@@ -43,8 +43,9 @@ public class convolutionalLayer {
 	int sample;
 	
 	public convolutionalLayer(int layerChannel, int layerHeight, int layerWidth, 
-			int nextLayerChannel, Padding paddingType, int windowHeight, int windowWidth, int sample) {
-		this.currentLayerData = new int[sample][layerChannel][layerHeight][layerWidth];
+			int nextLayerChannel, Padding paddingType, int windowHeight, int windowWidth, 
+			int sample,int[][][][] currentLayerData) {
+		this.currentLayerData = currentLayerData;
 		this.currentLayerDelta = new float[sample][layerChannel][layerHeight][layerWidth];
 		this.paddingType = paddingType;
 		if (paddingType == Padding.same) {
@@ -80,6 +81,7 @@ public class convolutionalLayer {
 	{
 		int[][][][] inData = currentLayerData;
 		int[][][][] outData;
+		outData = new int[sample][][][];
 		if (Padding.same == paddingType) {
 			outData = new int[sample][nextLayerChannel]
 					[layerHeight]
@@ -87,17 +89,17 @@ public class convolutionalLayer {
 		}
 		else {
 			outData = new int[sample][nextLayerChannel]
-					[layerHeight - hStride + 1]
-							[layerWidth - wStride + 1]; 
+					[layerHeight - windowHeight + 1]
+							[layerWidth - windowWidth + 1]; 
 		}
 		int[][][][] inDataPadded = this.paddingInData(inData, paddingType);
 		//步长暂时设置为1
 		for (int sp = 0; sp < sample; sp++) {
-			for (int oc = 0; oc < nextLayerChannel; oc++) {
-
-				for(int h = 0; h < inDataPadded[0].length-windowHeight+1; h ++)
+			for (int oc = 0; oc < nextLayerChannel; oc++) 
+			{
+				for(int h = 0; h < inDataPadded[sp][0].length-windowHeight+1; h ++)
 				{
-					for(int w = 0; w < inDataPadded[0][h].length-windowWidth+1; w++)
+					for(int w = 0; w < inDataPadded[sp][0][h].length-windowWidth+1; w++)
 					{
 						for (int ic = 0; ic < layerChannel; ic++) {
 							for (int wh = 0; wh < windowHeight; wh++) {
@@ -111,6 +113,7 @@ public class convolutionalLayer {
 				}
 			}
 		}
+		ActivationFunctions.relu(outData);
 		return outData;
 	}
 	/*
@@ -132,13 +135,13 @@ public class convolutionalLayer {
 						[currentDeltaPadded[0][0].length - wStride + 1];
 		for (int sp = 0; sp < sample; sp++) 
 		{
-			for(int outc=0; outc < preDelta.length; outc++)
+			for(int outc=0; outc < preDelta[sp].length; outc++)
 			{
 				//计算前一层delta
-				for(int inc=0; inc < currentDeltaPadded.length; inc++)
+				for(int inc=0; inc < currentDeltaPadded[sp].length; inc++)
 				{
-					for (int iny = 0; iny < currentDeltaPadded[inc].length; iny++) {
-						for (int inx = 0; inx < currentDeltaPadded[inc][iny].length; inx++) {
+					for (int iny = 0; iny < currentDeltaPadded[sp][inc].length; iny++) {
+						for (int inx = 0; inx < currentDeltaPadded[sp][inc][iny].length; inx++) {
 							float delta = currentDeltaPadded[sp][inc][iny][inx];
 							for (int wy = 0; wy < convolutionalKernel[inc][outc].length; wy++) {
 								for (int wx = 0; wx <  convolutionalKernel[inc][outc][wy].length; wx++) {
@@ -151,16 +154,16 @@ public class convolutionalLayer {
 					//计算卷积核参数
 					for (int wy = 0; wy < convolutionalKernel[inc][outc].length; wy++) {
 						for (int wx = 0; wx < convolutionalKernel[inc][outc][wy].length; wx++) {
-							for (int iny = 0; iny < currentDeltaPadded[inc].length; iny++) {
-								for (int inx = 0; inx < currentDeltaPadded[inc][iny].length; inx++) {
+							for (int iny = 0; iny < currentDeltaPadded[sp][inc].length; iny++) {
+								for (int inx = 0; inx < currentDeltaPadded[sp][inc][iny].length; inx++) {
 									convolutionalKernel[inc][outc][wy][wx] += currentDeltaPadded[sp][inc][iny][inx] * (float)pretData[sp][inc][iny+wy][inx+wx];
 								}
 							}
 						}
 					}
 					//计算偏置项
-					for (int iny = 0; iny < currentDelta[inc].length; iny++) {
-						for (int inx = 0; inx < currentDelta[inc][iny].length; inx++) {
+					for (int iny = 0; iny < currentDelta[sp][inc].length; iny++) {
+						for (int inx = 0; inx < currentDelta[sp][inc][iny].length; inx++) {
 							b[inc] += currentDelta[sp][inc][iny][inx];
 						}
 					}
@@ -168,7 +171,7 @@ public class convolutionalLayer {
 			}
 		}
 		
-	}
+	}	
 
 	/*
 	 * 方法：数组填充
@@ -185,12 +188,12 @@ public class convolutionalLayer {
 		}
 		if(paddingType == Padding.same)
 		{
-			int[][][][] buf = new int[sample][inData.length][inData[0].length+windowHeight-1][inData[0][0].length+windowWidth-1];
+			int[][][][] buf = new int[sample][inData[0].length][inData[0][0].length+windowHeight-1][inData[0][0][0].length+windowWidth-1];
 			for (int sp = 0; sp < sample; sp++) 
 			{
-				for(int c = 0; c < inData.length; c++)
+				for(int c = 0; c < inData[sp].length; c++)
 				{
-					for(int h = 0; h < inData[c].length; h++)
+					for(int h = 0; h < inData[sp][c].length; h++)
 					{
 						System.arraycopy(inData[sp][c][h], 0, buf[sp][c][h+windowHeight/2], windowWidth/2, inData[sp][c][h].length);
 					}
@@ -213,14 +216,14 @@ public class convolutionalLayer {
 			float[][][][] buf = new float[sample][inData.length][inData[0].length+windowHeight-1][inData[0][0].length+windowWidth-1];
 			for (int sp = 0; sp < sample; sp++) 
 			{
-				for(int c = 0; c < inData.length; c++)
+				for(int c = 0; c < inData[sp].length; c++)
 				{
-					for(int h = 0; h < inData[c].length; h++)
+					for(int h = 0; h < inData[sp][c].length; h++)
 					{
 						System.arraycopy(inData[sp][c][h], 0, buf[sp][c][h+windowHeight/2], windowWidth/2, inData[sp][c][h].length);
 					}
 				}
-			}
+			}	
 			return buf;
 		}
 		return null;

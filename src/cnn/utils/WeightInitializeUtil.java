@@ -20,4 +20,17 @@ public class WeightInitializeUtil {
 			}
 		}		
 	}
+	
+	public static void xavier(float[][] weight, int fanIn, int fanOut)
+	{
+		Random random = new Random();
+		double basicNum = Math.sqrt((double)6/(double)(fanIn+fanOut));
+		double area = 2 * basicNum;
+		for (int outc = 0; outc < weight.length; outc++) {
+			for (int inc = 0; inc < weight[outc].length; inc++) {
+				//[-sqrt(6/(fanIn+fanOut)),sqrt(6/(fanIn+fanOut))]的均匀分布
+				weight[outc][inc] =(float) (-basicNum + random.nextDouble() * area);
+			}
+		}		
+	}
 }
