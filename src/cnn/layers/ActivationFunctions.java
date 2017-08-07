@@ -46,6 +46,31 @@ public class ActivationFunctions {
 			}
 		}
    }
+   /*
+    * softMax 激活函数
+    */
+   public static void softMax(int[][] inData, float[][] outData)
+   {
+	   if(inData.length != outData.length)
+	   {
+		   System.out.println("ActivationFunctions.softMax().Data_length_error");
+		   return;
+	   }
+	   float acc = 0;
+	   for (int c = 0; c < inData.length; c++) 
+	   {
+		   acc = 0;
+		   for (int i = 0; i < inData[c].length; i++) 
+		   {
+			   outData[c][i] = (float)Math.exp(inData[c][i]);
+			   acc += outData[c][i];
+		   }
+		   for (int i = 0; i < outData[c].length; i++) {
+			   outData[c][i] = outData[c][i]/acc;
+		   }		
+	   }
+   }
+   
    //卷积层到全连接层数组转化
    public static int[][] convertArray(int[][][][] inData)
    {
@@ -53,6 +78,17 @@ public class ActivationFunctions {
 		for (int sp = 0; sp < inData.length; sp++) {
 			for (int c = 0; c < inData[sp].length; c++) {
 				outData[sp][c] = inData[sp][c][0][0];
+			}
+		}
+		return outData;
+   }
+   
+   public static float[][][][] deConvertArray(float[][] inData)
+   {
+	   float[][][][] outData = new float[inData.length][inData[0].length][1][1];
+		for (int sp = 0; sp < inData.length; sp++) {
+			for (int c = 0; c < inData[sp].length; c++) {
+				outData[sp][c][0][0] = inData[sp][c];
 			}
 		}
 		return outData;

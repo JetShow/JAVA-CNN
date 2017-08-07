@@ -130,9 +130,10 @@ public class convolutionalLayer {
 		float[] b = bias;
 		float[][][][] preDelta;
 		float[][][][] currentDeltaPadded = this.paddingInData(currentDelta, paddingType);
-		preDelta = new float[sample][currentDeltaPadded.length]
-				[currentDeltaPadded[0].length - hStride + 1]
-						[currentDeltaPadded[0][0].length - wStride + 1];
+//		preDelta = new float[sample][currentDeltaPadded.length]
+//				[currentDeltaPadded[0].length - hStride + 1]
+//						[currentDeltaPadded[0][0].length - wStride + 1];
+		preDelta = currentLayerDelta;
 		for (int sp = 0; sp < sample; sp++) 
 		{
 			for(int outc=0; outc < preDelta[sp].length; outc++)
@@ -156,7 +157,7 @@ public class convolutionalLayer {
 						for (int wx = 0; wx < convolutionalKernel[inc][outc][wy].length; wx++) {
 							for (int iny = 0; iny < currentDeltaPadded[sp][inc].length; iny++) {
 								for (int inx = 0; inx < currentDeltaPadded[sp][inc][iny].length; inx++) {
-									convolutionalKernel[inc][outc][wy][wx] += currentDeltaPadded[sp][inc][iny][inx] * (float)pretData[sp][inc][iny+wy][inx+wx];
+									convolutionalKernel[inc][outc][wy][wx] += currentDeltaPadded[sp][inc][iny][inx] * (float)pretData[sp][outc][iny+wy][inx+wx];
 								}
 							}
 						}

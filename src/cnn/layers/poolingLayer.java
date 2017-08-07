@@ -112,4 +112,102 @@ public class poolingLayer{
 		return (0==inHeight%strideY)&&(0==inWidth%strideX)? true: false;
 	}
 
+	public int[][][][] getCurrentLayerData() {
+		return currentLayerData;
+	}
+
+	public void setCurrentLayerData(int[][][][] currentLayerData) {
+		this.currentLayerData = currentLayerData;
+	}
+
+	public float[][][][] getCurrentLayerDelta() {
+		return currentLayerDelta;
+	}
+
+	public void setCurrentLayerDelta(float[][][][] currentLayerDelta) {
+		this.currentLayerDelta = currentLayerDelta;
+	}
+
+	public float[][][][] getNextLayerDelta() {
+		return nextLayerDelta;
+	}
+
+	public void setNextLayerDelta(float[][][][] nextLayerDelta) {
+		this.nextLayerDelta = nextLayerDelta;
+	}
+
+	public boolean[][][][] getMaxLocation() {
+		return maxLocation;
+	}
+
+	public void setMaxLocation(boolean[][][][] maxLocation) {
+		this.maxLocation = maxLocation;
+	}
+
+	public int getLayerChannel() {
+		return layerChannel;
+	}
+
+	public void setLayerChannel(int layerChannel) {
+		this.layerChannel = layerChannel;
+	}
+
+	public int getLayerHeight() {
+		return layerHeight;
+	}
+
+	public void setLayerHeight(int layerHeight) {
+		this.layerHeight = layerHeight;
+	}
+
+	public int getLayerWidth() {
+		return layerWidth;
+	}
+
+	public void setLayerWidth(int layerWidth) {
+		this.layerWidth = layerWidth;
+	}
+
+	public int getPoolX() {
+		return poolX;
+	}
+
+	public void setPoolX(int poolX) {
+		this.poolX = poolX;
+	}
+
+	public int getPoolY() {
+		return poolY;
+	}
+
+	public void setPoolY(int poolY) {
+		this.poolY = poolY;
+	}
+
+	public int getStrideX() {
+		return strideX;
+	}
+
+	public void setStrideX(int strideX) {
+		this.strideX = strideX;
+	}
+
+	public int getStrideY() {
+		return strideY;
+	}
+
+	public void setStrideY(int strideY) {
+		this.strideY = strideY;
+	}
+
+	public int getSample() {
+		return sample;
+	}
+
+	public void setSample(int sample) {
+		this.sample = sample;
+	}
+	
+	
+	
 }

@@ -1,5 +1,7 @@
 package cnn.layers;
 
+import javax.xml.transform.Templates;
+
 import cnn.utils.WeightInitializeUtil;
 
 public class FullConnectedLayer {
@@ -40,9 +42,11 @@ public class FullConnectedLayer {
 	{
 		for (int sp = 0; sp < sample; sp++) {
 			for (int outc = 0; outc < currentLayerDim; outc++) {
+				float temp = 0;
 				for (int inc = 0; inc < preLayerDim; inc++) {
-					currentLayerData[sp][outc] = (int) (preLayerData[sp][inc] * weight[inc][outc]);
+					temp += preLayerData[sp][inc] * weight[inc][outc];
 				}
+				currentLayerData[sp][outc] = (int) temp;
 			}
 		}
 		return currentLayerData;
@@ -69,4 +73,59 @@ public class FullConnectedLayer {
 		}
 		
 	}
+	public int[][] getPreLayerData() {
+		return preLayerData;
+	}
+	public void setPreLayerData(int[][] preLayerData) {
+		this.preLayerData = preLayerData;
+	}
+	public int[][] getCurrentLayerData() {
+		return currentLayerData;
+	}
+	public void setCurrentLayerData(int[][] currentLayerData) {
+		this.currentLayerData = currentLayerData;
+	}
+	public float[][] getPreLayerDelta() {
+		return preLayerDelta;
+	}
+	public void setPreLayerDelta(float[][] preLayerDelta) {
+		this.preLayerDelta = preLayerDelta;
+	}
+	public float[][] getCurrentLayerDelta() {
+		return currentLayerDelta;
+	}
+	public void setCurrentLayerDelta(float[][] currentLayerDelta) {
+		this.currentLayerDelta = currentLayerDelta;
+	}
+	public float[] getBias() {
+		return bias;
+	}
+	public void setBias(float[] bias) {
+		this.bias = bias;
+	}
+	public float[][] getWeight() {
+		return weight;
+	}
+	public void setWeight(float[][] weight) {
+		this.weight = weight;
+	}
+	public int getPreLayerDim() {
+		return preLayerDim;
+	}
+	public void setPreLayerDim(int preLayerDim) {
+		this.preLayerDim = preLayerDim;
+	}
+	public int getCurrentLayerDim() {
+		return currentLayerDim;
+	}
+	public void setCurrentLayerDim(int currentLayerDim) {
+		this.currentLayerDim = currentLayerDim;
+	}
+	public int getSample() {
+		return sample;
+	}
+	public void setSample(int sample) {
+		this.sample = sample;
+	}
+	
 }
