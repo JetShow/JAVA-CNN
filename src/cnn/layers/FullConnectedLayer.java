@@ -24,7 +24,7 @@ public class FullConnectedLayer {
 	//样本数
 	int sample;
 	
-	float sampleFactor = (float) 1/50;
+//	float sampleFactor = 1/sample;
 				
 	public FullConnectedLayer(int preLayerDim, int currentLayerDim, int sample, float[][] preLayerData) {
 		this.preLayerDim = preLayerDim;
@@ -48,9 +48,10 @@ public class FullConnectedLayer {
 				for (int inc = 0; inc < preLayerDim; inc++) {
 					temp += preLayerData[sp][inc] * weight[inc][outc];
 				}
-				currentLayerData[sp][outc] = (int) temp;
+				currentLayerData[sp][outc] = temp;
 			}
 		}
+		ActivationFunctions.tanh(currentLayerData);
 		return currentLayerData;
 	}
 	public void backwardPropagation() {
@@ -58,20 +59,20 @@ public class FullConnectedLayer {
 		for (int sp = 0; sp < sample; sp++) {
 			for (int i = 0; i < preLayerDim; i++) {
 				for (int j = 0; j < currentLayerDim; j++) {
-					preLayerDelta[sp][i] += currentLayerDelta[sp][j] * weight[i][j];
+					preLayerDelta[sp][i] -= currentLayerDelta[sp][j] * weight[i][j] * (1-preLayerData[sp][i]*preLayerData[sp][i]);
 				}
 			}
 			for(int wh = 0; wh < weight.length; wh++)
 			{
 				for (int ww = 0; ww < weight[wh].length; ww++) {
 					//防止权值爆炸 * 0.02
-					weight[wh][ww] += currentLayerDelta[sp][ww] * preLayerData[sp][wh] * sampleFactor;
+					weight[wh][ww] -= currentLayerDelta[sp][ww] * preLayerData[sp][wh] / sample;
 				}
 			}
 			
 			for(int i = 0; i < bias.length; i++ )
 			{
-				bias[i] += currentLayerDelta[sp][i];
+				bias[i] -= currentLayerDelta[sp][i] / sample;
 			}
 		}
 		

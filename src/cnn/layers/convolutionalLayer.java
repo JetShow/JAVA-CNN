@@ -42,6 +42,8 @@ public class convolutionalLayer {
 	//样本数
 	int sample;
 	
+//	float factor = 1/sample;
+	
 	public convolutionalLayer(int layerChannel, int layerHeight, int layerWidth, 
 			int nextLayerChannel, Padding paddingType, int windowHeight, int windowWidth, 
 			int sample,float[][][][] currentLayerData) {
@@ -146,7 +148,7 @@ public class convolutionalLayer {
 							float delta = currentDeltaPadded[sp][inc][iny][inx];
 							for (int wy = 0; wy < convolutionalKernel[inc][outc].length; wy++) {
 								for (int wx = 0; wx <  convolutionalKernel[inc][outc][wy].length; wx++) {
-									preDelta[sp][outc][iny+wy][inx+wx] += delta * convolutionalKernel[inc][outc][wy][wx];
+									preDelta[sp][outc][iny+wy][inx+wx] -= delta * convolutionalKernel[inc][outc][wy][wx]/(windowHeight*windowWidth);
 								}
 							}
 							
@@ -157,7 +159,8 @@ public class convolutionalLayer {
 						for (int wx = 0; wx < convolutionalKernel[inc][outc][wy].length; wx++) {
 							for (int iny = 0; iny < currentDeltaPadded[sp][inc].length; iny++) {
 								for (int inx = 0; inx < currentDeltaPadded[sp][inc][iny].length; inx++) {
-									convolutionalKernel[inc][outc][wy][wx] += currentDeltaPadded[sp][inc][iny][inx] * (float)pretData[sp][outc][iny+wy][inx+wx]/50;
+									convolutionalKernel[inc][outc][wy][wx] -= currentDeltaPadded[sp][inc][iny][inx] * (float)pretData[sp][outc][iny+wy][inx+wx]
+										 /(sample*layerHeight*layerWidth);
 								}
 							}
 						}
@@ -165,7 +168,7 @@ public class convolutionalLayer {
 					//计算偏置项
 					for (int iny = 0; iny < currentDelta[sp][inc].length; iny++) {
 						for (int inx = 0; inx < currentDelta[sp][inc][iny].length; inx++) {
-							b[inc] += currentDelta[sp][inc][iny][inx];
+							b[inc] -= currentDelta[sp][inc][iny][inx] /(sample*layerHeight*layerWidth);
 						}
 					}
 				}
@@ -214,7 +217,7 @@ public class convolutionalLayer {
 		}
 		if(paddingType == Padding.same)
 		{
-			float[][][][] buf = new float[sample][inData.length][inData[0].length+windowHeight-1][inData[0][0].length+windowWidth-1];
+			float[][][][] buf = new float[sample][inData[0].length][inData[0][0].length+windowHeight-1][inData[0][0][0].length+windowWidth-1];
 			for (int sp = 0; sp < sample; sp++) 
 			{
 				for(int c = 0; c < inData[sp].length; c++)

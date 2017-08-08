@@ -46,6 +46,17 @@ public class ActivationFunctions {
 			}
 		}
    }
+   public static void tanh(float[][] inData)
+   {
+	   float expn, expp;
+				for (int h = 0; h < inData.length; h++) {
+					for (int w = 0; w < inData[h].length; w++) {
+							expp = (float) Math.exp(inData[h][w]);
+							expn = (float) Math.exp(-inData[h][w]);
+							inData[h][w] = (float) ((expp-expn)/(expn+expp)); 
+					}
+				}
+   }
    /*
     * softMax ¼¤»îº¯Êý
     */
