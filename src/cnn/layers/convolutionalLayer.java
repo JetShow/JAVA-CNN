@@ -9,7 +9,7 @@ public class convolutionalLayer {
 	 * 当前层数据数组
 	 * int[sample][channel][height][width] currentLayerData;
 	 */
-	int[][][][] currentLayerData;
+	float[][][][] currentLayerData;
 	//当前层误差数组
 	float[][][][] currentLayerDelta;
 	//下一层误差数组
@@ -44,7 +44,7 @@ public class convolutionalLayer {
 	
 	public convolutionalLayer(int layerChannel, int layerHeight, int layerWidth, 
 			int nextLayerChannel, Padding paddingType, int windowHeight, int windowWidth, 
-			int sample,int[][][][] currentLayerData) {
+			int sample,float[][][][] currentLayerData) {
 		this.currentLayerData = currentLayerData;
 		this.currentLayerDelta = new float[sample][layerChannel][layerHeight][layerWidth];
 		this.paddingType = paddingType;
@@ -77,22 +77,22 @@ public class convolutionalLayer {
 	 * param：inData 当前层的数据数组
 	 * param：outData 下一层的数据数组
 	 */
-	public int[][][][] forwardPropagation()
+	public float[][][][] forwardPropagation()
 	{
-		int[][][][] inData = currentLayerData;
-		int[][][][] outData;
-		outData = new int[sample][][][];
+		float[][][][] inData = currentLayerData;
+		float[][][][] outData;
+		outData = new float[sample][][][];
 		if (Padding.same == paddingType) {
-			outData = new int[sample][nextLayerChannel]
+			outData = new float[sample][nextLayerChannel]
 					[layerHeight]
 							[layerWidth];
 		}
 		else {
-			outData = new int[sample][nextLayerChannel]
+			outData = new float[sample][nextLayerChannel]
 					[layerHeight - windowHeight + 1]
 							[layerWidth - windowWidth + 1]; 
 		}
-		int[][][][] inDataPadded = this.paddingInData(inData, paddingType);
+		float[][][][] inDataPadded = this.paddingInData(inData, paddingType);
 		//步长暂时设置为1
 		for (int sp = 0; sp < sample; sp++) {
 			for (int oc = 0; oc < nextLayerChannel; oc++) 
@@ -125,7 +125,7 @@ public class convolutionalLayer {
 	 */
 	public void backwardPropagation()
 	{
-		int[][][][] pretData = currentLayerData; 
+		float[][][][] pretData = currentLayerData; 
 		float [][][][] currentDelta = nextLayerDelta;
 		float[] b = bias;
 		float[][][][] preDelta;
@@ -157,7 +157,7 @@ public class convolutionalLayer {
 						for (int wx = 0; wx < convolutionalKernel[inc][outc][wy].length; wx++) {
 							for (int iny = 0; iny < currentDeltaPadded[sp][inc].length; iny++) {
 								for (int inx = 0; inx < currentDeltaPadded[sp][inc][iny].length; inx++) {
-									convolutionalKernel[inc][outc][wy][wx] += currentDeltaPadded[sp][inc][iny][inx] * (float)pretData[sp][outc][iny+wy][inx+wx];
+									convolutionalKernel[inc][outc][wy][wx] += currentDeltaPadded[sp][inc][iny][inx] * (float)pretData[sp][outc][iny+wy][inx+wx]/50;
 								}
 							}
 						}
@@ -232,12 +232,12 @@ public class convolutionalLayer {
 	
 	
 	
-	public int[][][][] getCurrentLayerData() {
+	public float[][][][] getCurrentLayerData() {
 		return currentLayerData;
 	}
 
 
-	public void setCurrentLayerData(int[][][][] currentLayerData) {
+	public void setCurrentLayerData(float[][][][] currentLayerData) {
 		this.currentLayerData = currentLayerData;
 	}
 

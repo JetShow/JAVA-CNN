@@ -3,7 +3,7 @@ package cnn.layers;
 import cnn.utils.LossFunctions;
 
 public class OutputLayer {
-	int[][] inputLayerData;
+	float[][] inputLayerData;
 	
 	float[][] outPutLayerData;
 	
@@ -15,7 +15,7 @@ public class OutputLayer {
 	
 	int sample;
 	
-	public OutputLayer(int inputDim, int sample, int[][] inputLayerData) {
+	public OutputLayer(int inputDim, int sample, float[][] inputLayerData) {
 		this.inputDim = inputDim;
 		this.sample = sample;
 		outPutLayerData = new float[sample][inputDim];
@@ -38,10 +38,10 @@ public class OutputLayer {
 			layerDelta[c] = LossFunctions.mseForRegression(outPutLayerData[c], targetData[c]);
 		}
 	}
-	public int[][] getInputLayerData() {
+	public float[][] getInputLayerData() {
 		return inputLayerData;
 	}
-	public void setInputLayerData(int[][] inputLayerData) {
+	public void setInputLayerData(float[][] inputLayerData) {
 		this.inputLayerData = inputLayerData;
 	}
 	public float[][] getOutPutLayerData() {

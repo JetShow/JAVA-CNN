@@ -15,8 +15,8 @@ public class ConvolutionalLayerTest {
 	
 	public static void main(String[] arvgs) {
 		CifarData cifarData = new CifarData();
-		cifarData = ImageUtil.cifarReadData("E:/cifar-10-batches-bin/trainningData");
-		convolutionalLayer conLayer = new convolutionalLayer(3, 32, 32, 6, Padding.valid, 5, 5, 50, cifarData.getData());
+		cifarData = ImageUtil.cifarReadData("E:/cifar-10-batches-bin/trainningData", 0, 1);
+		convolutionalLayer conLayer = new convolutionalLayer(3, 32, 32, 6, Padding.valid, 5, 5, 50, cifarData.getNormalizationData());
 		
 		poolingLayer pLayer = new poolingLayer(6, 28, 28, 2, 2, 2, 2, 50,conLayer.forwardPropagation());
 		
@@ -25,7 +25,7 @@ public class ConvolutionalLayerTest {
 		poolingLayer pLayer2 = new poolingLayer(16, 10, 10, 2, 2, 2, 2, 50, conLayer2.forwardPropagation());
 		
 		convolutionalLayer conLayer3 = new convolutionalLayer(16, 5, 5, 120, Padding.valid, 5, 5, 50, pLayer2.forwardPropagation());
-		int[][][][] cl3data = conLayer3.forwardPropagation();
+		float[][][][] cl3data = conLayer3.forwardPropagation();
 		
 		FullConnectedLayer fLayer = new FullConnectedLayer(120, 84, 50 ,ActivationFunctions.convertArray(conLayer3.forwardPropagation()));
 		

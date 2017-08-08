@@ -154,13 +154,15 @@ public class ImageUtil {
 	}
 	
 	
-	public static CifarData cifarReadData(String binaryDataPath)
+	public static CifarData cifarReadData(String binaryDataPath, float min, float max)
 	{
 		FileInputStream reader = null;
 		BufferedInputStream bi = null;
+		float dis = (max - min)/255;
 //		FileReader reader = null;
 		ArrayList<String> fileNameList = traversalFile(binaryDataPath);
 		int[][][][] data = new int[50000][3][32][32];
+		float[][][][] normalizationData = new float[50000][3][32][32];
 		int[] dataLable = new int[50000];
 		int index = 0;
 		for (int i = 0; i < fileNameList.size(); i++) {
@@ -184,6 +186,7 @@ public class ImageUtil {
 						dataLable[imageIndex] = tempByte;
 					}else {
 						data[imageIndex][channels][height][width] = tempByte;
+						normalizationData[imageIndex][channels][height][width] = min + dis * (float)tempByte;
 					}					
 					index++;
 				}
@@ -195,6 +198,7 @@ public class ImageUtil {
 		CifarData cifarData = new CifarData();
 		cifarData.setData(data);
 		cifarData.setDataLable(dataLable);
+		cifarData.setNormalizationData(normalizationData);
 		return cifarData;
 	}
 		

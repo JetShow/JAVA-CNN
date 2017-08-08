@@ -2,7 +2,7 @@ package cnn.layers;
 
 public class poolingLayer{
 	//当前层数据数组
-	int [][][][] currentLayerData;
+	float [][][][] currentLayerData;
 	//当前层误差数组
 	float[][][][] currentLayerDelta;
 	//下一层误差数组
@@ -27,7 +27,7 @@ public class poolingLayer{
 	int sample;
 	
 	public poolingLayer(int layerChannel, int layerHeight, int layerWidth, 
-			int poolX, int poolY, int strideX, int strideY, int sample ,int[][][][] inData) {
+			int poolX, int poolY, int strideX, int strideY, int sample ,float[][][][] inData) {
 		this.layerChannel = layerChannel;
 		this.layerHeight = layerHeight;
 		this.layerWidth = layerWidth;
@@ -42,11 +42,11 @@ public class poolingLayer{
 		maxLocation = new boolean[sample][layerChannel][layerHeight][layerWidth];
 	}
 
-	public int[][][][] forwardPropagation() {
+	public float[][][][] forwardPropagation() {
 		// TODO Auto-generated method stub
-		int[][][][] indata = currentLayerData;
-		int[][][][] outdata = 
-				new int[sample][layerChannel][layerHeight/strideY][layerWidth/strideX];
+		float[][][][] indata = currentLayerData;
+		float[][][][] outdata = 
+				new float[sample][layerChannel][layerHeight/strideY][layerWidth/strideX];
 		if(!checkStride(layerHeight, 
 						layerWidth, 
 						strideX,
@@ -58,7 +58,7 @@ public class poolingLayer{
 			for (int inc = 0; inc < indata[sp].length; inc++) {
 				for (int iny = 0,outy=0; iny < indata[sp][inc].length; iny += strideY, outy++) {
 					for (int inx = 0,outx=0; inx < indata[sp][inc][iny].length; inx += strideY, outx++) {
-						int max = Integer.MIN_VALUE;
+						float max = Float.MIN_VALUE;
 						int maxY=0,maxX=0;
 						for (int py = 0; py < poolY; py++) {
 							for (int px = 0; px < poolX; px++) {
@@ -112,11 +112,11 @@ public class poolingLayer{
 		return (0==inHeight%strideY)&&(0==inWidth%strideX)? true: false;
 	}
 
-	public int[][][][] getCurrentLayerData() {
+	public float[][][][] getCurrentLayerData() {
 		return currentLayerData;
 	}
 
-	public void setCurrentLayerData(int[][][][] currentLayerData) {
+	public void setCurrentLayerData(float[][][][] currentLayerData) {
 		this.currentLayerData = currentLayerData;
 	}
 

@@ -2,7 +2,7 @@ package cnn.layers;
 
 public class ActivationFunctions {
 	//relu激活函数
-	public static void relu(int[][][][] inData)
+	public static void relu(float[][][][] inData)
 	{
 		for (int sp = 0; sp < inData.length; sp++) {
 			for (int c = 0; c < inData[sp].length; c++) {
@@ -49,7 +49,7 @@ public class ActivationFunctions {
    /*
     * softMax 激活函数
     */
-   public static void softMax(int[][] inData, float[][] outData)
+   public static void softMax(float[][] inData, float[][] outData)
    {
 	   if(inData.length != outData.length)
 	   {
@@ -72,9 +72,9 @@ public class ActivationFunctions {
    }
    
    //卷积层到全连接层数组转化
-   public static int[][] convertArray(int[][][][] inData)
+   public static float[][] convertArray(float[][][][] inData)
    {
-	   int[][] outData = new int[inData.length][inData[0].length];
+	   float[][] outData = new float[inData.length][inData[0].length];
 		for (int sp = 0; sp < inData.length; sp++) {
 			for (int c = 0; c < inData[sp].length; c++) {
 				outData[sp][c] = inData[sp][c][0][0];

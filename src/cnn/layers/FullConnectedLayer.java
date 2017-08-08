@@ -6,9 +6,9 @@ import cnn.utils.WeightInitializeUtil;
 
 public class FullConnectedLayer {
 	//第L-1层的数据
-	int[][] preLayerData;
+	float[][] preLayerData;
 	//第L层的数据
-	int[][] currentLayerData;
+	float[][] currentLayerData;
 	//第L-1层的误差数组
 	float[][] preLayerDelta;
 	//第L层的误差数组
@@ -23,22 +23,24 @@ public class FullConnectedLayer {
 	int currentLayerDim;
 	//样本数
 	int sample;
+	
+	float sampleFactor = (float) 1/50;
 				
-	public FullConnectedLayer(int preLayerDim, int currentLayerDim, int sample, int[][] preLayerData) {
+	public FullConnectedLayer(int preLayerDim, int currentLayerDim, int sample, float[][] preLayerData) {
 		this.preLayerDim = preLayerDim;
 		this.currentLayerDim = currentLayerDim;
 		this.preLayerData = preLayerData;
 		this.sample = sample;
 		this.preLayerData = preLayerData;
 		this.preLayerDelta = new float[sample][preLayerDim];
-		this.currentLayerData = new int[sample][currentLayerDim];
+		this.currentLayerData = new float[sample][currentLayerDim];
 		this.currentLayerDelta = new float[sample][currentLayerDim];
 		this.bias = new float[currentLayerDim];
 		this.weight = new float[preLayerDim][currentLayerDim];
 		WeightInitializeUtil.xavier(weight, preLayerDim, currentLayerDim);
 		
 	}
-	public int[][] forwordPropagation()
+	public float[][] forwordPropagation()
 	{
 		for (int sp = 0; sp < sample; sp++) {
 			for (int outc = 0; outc < currentLayerDim; outc++) {
@@ -62,7 +64,8 @@ public class FullConnectedLayer {
 			for(int wh = 0; wh < weight.length; wh++)
 			{
 				for (int ww = 0; ww < weight[wh].length; ww++) {
-					weight[wh][ww] += currentLayerDelta[sp][ww] * preLayerData[sp][wh];
+					//防止权值爆炸 * 0.02
+					weight[wh][ww] += currentLayerDelta[sp][ww] * preLayerData[sp][wh] * sampleFactor;
 				}
 			}
 			
@@ -73,16 +76,16 @@ public class FullConnectedLayer {
 		}
 		
 	}
-	public int[][] getPreLayerData() {
+	public float[][] getPreLayerData() {
 		return preLayerData;
 	}
-	public void setPreLayerData(int[][] preLayerData) {
+	public void setPreLayerData(float[][] preLayerData) {
 		this.preLayerData = preLayerData;
 	}
-	public int[][] getCurrentLayerData() {
+	public float[][] getCurrentLayerData() {
 		return currentLayerData;
 	}
-	public void setCurrentLayerData(int[][] currentLayerData) {
+	public void setCurrentLayerData(float[][] currentLayerData) {
 		this.currentLayerData = currentLayerData;
 	}
 	public float[][] getPreLayerDelta() {
