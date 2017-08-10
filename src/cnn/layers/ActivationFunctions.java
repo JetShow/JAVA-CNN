@@ -33,14 +33,11 @@ public class ActivationFunctions {
    //tanh¼¤»îº¯Êý
    public static void tanh(float[][][][] inData)
    {
-	   float expn, expp;
 		for (int sp = 0; sp < inData.length; sp++) {
 			for (int c = 0; c < inData[sp].length; c++) {
 				for (int h = 0; h < inData[sp][c].length; h++) {
 					for (int w = 0; w < inData[sp][c][h].length; w++) {
-							expp = (float) Math.exp(inData[sp][c][h][w]);
-							expn = (float) Math.exp(-inData[sp][c][h][w]);
-							inData[sp][c][h][w] = (float) ((expp-expn)/(expn+expp)); 
+							inData[sp][c][h][w] = (float) (Math.tanh(inData[sp][c][h][w])); 
 					}
 				}
 			}
@@ -48,12 +45,9 @@ public class ActivationFunctions {
    }
    public static void tanh(float[][] inData)
    {
-	   float expn, expp;
 				for (int h = 0; h < inData.length; h++) {
 					for (int w = 0; w < inData[h].length; w++) {
-							expp = (float) Math.exp(inData[h][w]);
-							expn = (float) Math.exp(-inData[h][w]);
-							inData[h][w] = (float) ((expp-expn)/(expn+expp)); 
+							inData[h][w] = (float) (Math.tanh(inData[h][w])); 
 					}
 				}
    }

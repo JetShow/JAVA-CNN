@@ -25,10 +25,12 @@ public class OutputLayer {
 	}
 	public float forwardPropagation()
 	{
-		ActivationFunctions.softMax(inputLayerData, outPutLayerData);
+//		ActivationFunctions.softMax(inputLayerData, outPutLayerData);
+		outPutLayerData = inputLayerData;
 		float loss = 0;
 		for (int c = 0; c < outPutLayerData.length; c++) {
-			loss += LossFunctions.ce(outPutLayerData[c], targetData[c]);
+//			loss += LossFunctions.ce(outPutLayerData[c], targetData[c]);
+			loss += LossFunctions.mse(outPutLayerData[c], targetData[c]);
 		}
 		return loss;
 	}

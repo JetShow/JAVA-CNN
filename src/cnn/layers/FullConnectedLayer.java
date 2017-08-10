@@ -56,10 +56,11 @@ public class FullConnectedLayer {
 	}
 	public void backwardPropagation() {
 	
+		float[][] preLayerDelta = new float[sample][preLayerDim];
 		for (int sp = 0; sp < sample; sp++) {
 			for (int i = 0; i < preLayerDim; i++) {
 				for (int j = 0; j < currentLayerDim; j++) {
-					preLayerDelta[sp][i] -= currentLayerDelta[sp][j] * weight[i][j] * (1-preLayerData[sp][i]*preLayerData[sp][i]);
+					preLayerDelta[sp][i] += currentLayerDelta[sp][j] * weight[i][j]; //* (1-preLayerData[sp][i]*preLayerData[sp][i]);
 				}
 			}
 			for(int wh = 0; wh < weight.length; wh++)
@@ -75,7 +76,7 @@ public class FullConnectedLayer {
 				bias[i] -= currentLayerDelta[sp][i] / sample;
 			}
 		}
-		
+		this.preLayerDelta = preLayerDelta;
 	}
 	public float[][] getPreLayerData() {
 		return preLayerData;

@@ -54,6 +54,7 @@ public class poolingLayer{
 		{
 			System.err.println("invalidated boolSize!");
 		}
+		boolean[][][][] maxLocation = new boolean[sample][layerChannel][layerHeight][layerWidth];
 		for (int sp = 0; sp < sample; sp++) {
 			for (int inc = 0; inc < indata[sp].length; inc++) {
 				for (int iny = 0,outy=0; iny < indata[sp][inc].length; iny += strideY, outy++) {
@@ -77,13 +78,14 @@ public class poolingLayer{
 				}
 			}
 		}
-		
+		this.maxLocation = maxLocation;
 		return outdata;
 	}
 
 	public void backwardPropagation() {
 		// TODO Auto-generated method stub
 		float[][][][] currentDelta = nextLayerDelta;
+		float[][][][] currentLayerDelta = new float[sample][layerChannel][layerHeight][layerWidth];
 //		float[][][] preDelta = new 
 //				float[layerChannel]
 //						[layerHeight*strideY]
@@ -105,7 +107,7 @@ public class poolingLayer{
 				}
 			}
 		}
-				
+		this.currentLayerDelta = currentLayerDelta;		
 	}
 	private boolean checkStride(int inHeight, int inWidth, int strideX, int strideY)
 	{

@@ -62,7 +62,8 @@ public class convolutionalLayer {
 										[layerChannel]
 												[windowHeight]
 														[windowWidth];
-		WeightInitializeUtil.xavier(convolutionalKernel, windowHeight * windowWidth, windowHeight * windowWidth);
+		WeightInitializeUtil.xavier(convolutionalKernel,
+				layerChannel * windowHeight * windowWidth, nextLayerChannel*windowHeight * windowWidth);
 		this.bias = new float[nextLayerChannel];
 		this.windowHeight = windowHeight;
 		this.windowWidth = windowWidth;
@@ -135,7 +136,8 @@ public class convolutionalLayer {
 //		preDelta = new float[sample][currentDeltaPadded.length]
 //				[currentDeltaPadded[0].length - hStride + 1]
 //						[currentDeltaPadded[0][0].length - wStride + 1];
-		preDelta = currentLayerDelta;
+		preDelta = new float[sample][layerChannel][layerHeight][layerWidth];
+//		preDelta = currentLayerDelta;
 		for (int sp = 0; sp < sample; sp++) 
 		{
 			for(int outc=0; outc < preDelta[sp].length; outc++)
@@ -148,7 +150,7 @@ public class convolutionalLayer {
 							float delta = currentDeltaPadded[sp][inc][iny][inx];
 							for (int wy = 0; wy < convolutionalKernel[inc][outc].length; wy++) {
 								for (int wx = 0; wx <  convolutionalKernel[inc][outc][wy].length; wx++) {
-									preDelta[sp][outc][iny+wy][inx+wx] -= delta * convolutionalKernel[inc][outc][wy][wx]/(windowHeight*windowWidth);
+									preDelta[sp][outc][iny+wy][inx+wx] += delta * convolutionalKernel[inc][outc][wy][wx]/(windowHeight*windowWidth);
 								}
 							}
 							
@@ -174,7 +176,7 @@ public class convolutionalLayer {
 				}
 			}
 		}
-		
+		currentLayerDelta = preDelta;
 	}	
 
 	/*

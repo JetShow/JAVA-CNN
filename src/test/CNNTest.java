@@ -15,24 +15,30 @@ public class CNNTest {
 		// TODO Auto-generated method stub
 		float loss = Float.MAX_VALUE;
 		float[][] targetData = new float[50][10];
-		CifarData cifarData = new CifarData();
-		cifarData = ImageUtil.cifarReadData("E:/cifar-10-batches-bin/trainningData", 0, 1);;
+		CifarData cifarData = new CifarData();		
+		cifarData = ImageUtil.cifarReadData("E:/cifar-10-batches-bin/trainningData", 0, 1);
+		for (int i = 0; i < targetData.length; i++) {
+			int j = cifarData.getDataLable()[i];
+			targetData[i][j] = 1;
+		};
 		
-		convolutionalLayer conLayer = new convolutionalLayer(3, 32, 32, 6, Padding.valid, 5, 5, 50, cifarData.getNormalizationData());
+		double tanh = Math.tanh(0.00001);
 		
-		poolingLayer pLayer = new poolingLayer(6, 28, 28, 2, 2, 2, 2, 50,null);
+		convolutionalLayer conLayer = new convolutionalLayer(3, 32, 32, 6, Padding.valid, 5, 5, 10, cifarData.getNormalizationData());
 		
-		convolutionalLayer conLayer2 = new convolutionalLayer(6, 14, 14, 16, Padding.valid, 5, 5, 50, null);
+		poolingLayer pLayer = new poolingLayer(6, 28, 28, 2, 2, 2, 2, 10,null);
 		
-		poolingLayer pLayer2 = new poolingLayer(16, 10, 10, 2, 2, 2, 2, 50, null);
+		convolutionalLayer conLayer2 = new convolutionalLayer(6, 14, 14, 16, Padding.valid, 5, 5, 10, null);
 		
-		convolutionalLayer conLayer3 = new convolutionalLayer(16, 5, 5, 120, Padding.valid, 5, 5, 50, null);
+		poolingLayer pLayer2 = new poolingLayer(16, 10, 10, 2, 2, 2, 2, 10, null);
 		
-		FullConnectedLayer fLayer = new FullConnectedLayer(120, 84, 50 ,null);
+		convolutionalLayer conLayer3 = new convolutionalLayer(16, 5, 5, 120, Padding.valid, 5, 5, 10, null);
 		
-		FullConnectedLayer fLayer2 = new FullConnectedLayer(84, 10, 50 ,null);
+		FullConnectedLayer fLayer = new FullConnectedLayer(120, 84, 10 ,null);
 		
-		OutputLayer oLayer = new OutputLayer(10, 50, null);
+		FullConnectedLayer fLayer2 = new FullConnectedLayer(84, 10, 10 ,null);
+		
+		OutputLayer oLayer = new OutputLayer(10, 10, null);
 		
 		while (true)
 		{									
@@ -42,12 +48,7 @@ public class CNNTest {
 			
 			pLayer2.setCurrentLayerData(conLayer2.forwardPropagation());
 			
-			conLayer3.setCurrentLayerData(pLayer2.forwardPropagation());
-			
-			for (int i = 0; i < targetData.length; i++) {
-				int j = cifarData.getDataLable()[i];
-				targetData[i][j] = 1;
-			}
+			conLayer3.setCurrentLayerData(pLayer2.forwardPropagation());			
 			
 			fLayer.setPreLayerData(ActivationFunctions.convertArray(conLayer3.forwardPropagation()));
 			
@@ -59,7 +60,7 @@ public class CNNTest {
 			
 			loss = oLayer.forwardPropagation();
 			
-			if (loss < 50) {
+			if (loss < 0.001) {
 				break;
 			}
 			
